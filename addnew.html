@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Details Form</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* styles.css */
+
+body {
+    background-image:url("https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 100px;
+}
+
+.form-container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 4px 8px 12px rgba(107, 106, 106, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group input[type="radio"] {
+  margin-right: 5px;
+}
+/* Align radio buttons with their labels on the same line */
+.form-group .gender-options {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.gender-options label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+label {
+    display: flex;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="url"],
+button {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#result {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: green;
+  text-align: center;
+}
+
+  </style>
+</head>
+<body>
+
+    <h1>Enter your details to get listed on Brand Buddies</h1>
+  <div class="form-container">
+    <form id="userForm">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Gender:</label>
+        <div class="gender-options">
+          <label>
+            <input type="radio" id="male" name="gender" value="Male" required>
+            Male
+          </label>
+          <label>
+            <input type="radio" id="female" name="gender" value="Female">
+            Female
+          </label>
+          <label>
+            <input type="radio" id="other" name="gender" value="Other">
+            Other
+          </label>
+        </div>
+      </div>
+      
+      
+      <div class="form-group">
+        <label for="image">Upload Image:</label>
+        <div class="file-upload">
+          <input type="file" id="image" name="image" accept="image/*" required>
+        </div>
+      </div>
+      
+      
+      <div class="form-group">
+        <label for="socialMedia">Social Media Link:</label>
+        <input type="url" id="socialMedia" name="socialMedia" required>
+      </div>
+      
+      <button type="submit">ADD</button>
+    </form>
+    <div id="result"></div>
+  </div>
+  <script>
+    // script.js
+document.getElementById('userForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById('name').value;
+  const location = document.getElementById('location').value;
+  const gender = document.querySelector('input[name="gender"]:checked')?.value;
+  const socialMedia = document.getElementById('socialMedia').value;
+  const image = document.getElementById('image').files[0];
+
+  if (name && location && gender && socialMedia && image) {
+    const reader = new FileReader();
+    reader.onload = function () {
+      document.getElementById('result').innerHTML = `
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Location:</strong> ${location}</p>
+        <p><strong>Gender:</strong> ${gender}</p>
+        <p><strong>Social Media Link:</strong> <a href="${socialMedia}" target="_blank">${socialMedia}</a></p>
+        <p><strong>Uploaded Image:</strong></p>
+        <img src="${reader.result}" alt="Uploaded Image" style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 4px;">
+      `;
+    };
+    reader.readAsDataURL(image);
+  } else {
+    alert('Please fill out all fields.');
+  }
+});
+
+  </script>
+</body>
+</html>
