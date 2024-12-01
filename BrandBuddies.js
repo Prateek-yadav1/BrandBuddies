@@ -193,33 +193,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const newlyAddedContainer = document.getElementById('newly-added-influencers');
   
     async function fetchNewlyAddedInfluencers() {
-      try {
-        const response = await fetch('/Influencer');
-        const newInfluencers = await response.json();
-  
-        // Clear any existing content
-        newlyAddedContainer.innerHTML = '';
-  
-        // Create influencer cards
-        newInfluencers.forEach(influencer => {
-          const influencerCard = document.createElement('div');
-          influencerCard.classList.add('influencer');
-          
-          influencerCard.innerHTML = `
-            <img src="${influencer.image ? '/' + influencer.image : 'default-profile.jpg'}" alt="${influencer.name}">
-            <h3>${influencer.name}</h3>
-            <p>${influencer.platform} Influencer</p>
-            <p>${influencer.category} | ${influencer.location}</p>
-            <p>Price: $${influencer.price}</p>
-          `;
-  
-          newlyAddedContainer.appendChild(influencerCard);
-        });
-      } catch (error) {
-        console.error('Error fetching newly added influencers:', error);
-        newlyAddedContainer.innerHTML = '<p>Unable to load new influencers</p>';
+        try {
+          // Use the full server URL
+          const response = await fetch('http://localhost:5001/newly-added-influencers');
+          const newInfluencers = await response.json();
+      
+          // Rest of the code remains the same
+          const newlyAddedContainer = document.getElementById('newly-added-influencers');
+          newlyAddedContainer.innerHTML = ''; 
+      
+          newInfluencers.forEach(influencer => {
+            const influencerCard = document.createElement('div');
+            influencerCard.classList.add('influencer');
+            
+            influencerCard.innerHTML = `
+              <a href="${influencer.socialMediaLink}" target="_blank">
+                <img src="${influencer.image ? '/' + influencer.image : 'default-profile.jpg'}" alt="${influencer.name}">
+                <h3>${influencer.name}</h3>
+                <p>${influencer.platform} Influencer</p>
+                <p>${influencer.category} | ${influencer.location}</p>
+                <p>Price: $${influencer.price}</p>
+              </a>
+            `;
+      
+            newlyAddedContainer.appendChild(influencerCard);
+          });
+        } catch (error) {
+          console.error('Error fetching newly added influencers:', error);
+          document.getElementById('newly-added-influencers').innerHTML = '<p>Unable to load new influencers</p>';
+        }
       }
-    }
   
     // Fetch newly added influencers when page loads
     fetchNewlyAddedInfluencers();

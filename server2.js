@@ -74,4 +74,32 @@ app.post('/influencers/add', upload.single('image'), async (req, res) => {
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
   });
+
+ 
+  const cors = require('cors');
+  
+  // Add these middleware
+  app.use(cors());
+  app.use(express.json());
+app.use(cors({
+  origin: 'http://127.0.0.1:5500', // Your frontend URL
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+  
+  // Route for newly added influencers
+  app.get('/newly-added-influencers', async (req, res) => {
+    try {
+      const newInfluencers = await Influencer.find()
+        .sort({ _id: -1 }) // Sort by most recently created
+        .limit(3); // Limit to 6 most recent influencers
+      
+      res.json(newInfluencers);
+    } catch (error) {
+      console.error('Error fetching newly added influencers:', error);
+      res.status(500).json({ message: 'Error fetching newly added influencers' });
+    }
+  });
+
+
   module.exports = { Influencer };
