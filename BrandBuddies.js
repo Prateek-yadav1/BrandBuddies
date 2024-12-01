@@ -18,15 +18,15 @@ document.querySelector(".search-btn").addEventListener("click", function() {
     let url = "";
 
     if (query === "instagram") {
-        url = "http://127.0.0.1:5500/instainfluencer.html";
+        url = "http://localhost:3000/instainfluencer.html";
     } else if (query === "about") {
-        url = "http://127.0.0.1:5500/aboutus.html";
+        url = "http://localhost:3000/aboutus.html";
     } 
     else if (query === "facebook") {
-        url = "https://facebook.com";
+        url = "http://localhost:3000/facebook.com";
     } 
     else if (query === "youtube") {
-        url = "http://127.0.0.1:5500/youtubeinflu.html";
+        url = "http://localhost:3000/youtubeinflu.html";
     } else {
         url = "404.html";//if no match found
     }
