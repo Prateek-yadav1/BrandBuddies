@@ -269,35 +269,46 @@ fetch('users.json')
     })
     .catch(error => console.error('Error loading user data:', error));
 
-document.getElementById('loginForm').addEventListener('submit', function(event) {
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    //show the loading spinner
+    // Show the loading spinner
     document.getElementById('loadingSpinner').style.display = 'block';
-    
+
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    
 
-    setTimeout(() => {
-        //find user in the fetched data
-        const user = users.find(user => user.username === username && user.password === password);
+    // Send a POST request to the backend
+    fetch('http://localhost:5001/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('loadingSpinner').style.display = 'none';
         const messageElement = document.getElementById('message');
 
-        document.getElementById('loadingSpinner').style.display = 'none';
-
-        if (user) {
+        if (data.message === 'Login successful') {
             messageElement.textContent = "Login successful!";
             messageElement.style.color = "green";
             setTimeout(() => {
-                window.location.href = "http://127.0.0.1:5500/BrandBuddies.html"; 
+                window.location.href = "http://127.0.0.1:5500/BrandBuddies.html"; // Redirect
             }, 1000);
         } else {
-            messageElement.textContent = "Invalid username or password.";
+            messageElement.textContent = data.message;
             messageElement.style.color = "red";
         }
-    }, 2000); 
+    })
+    .catch(error => {
+        document.getElementById('loadingSpinner').style.display = 'none';
+        console.error('Error:', error);
+        document.getElementById('message').textContent = "An error occurred. Please try again.";
+    });
 });
+
 
 
 //testing

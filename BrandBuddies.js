@@ -35,6 +35,7 @@ document.querySelector(".search-btn").addEventListener("click", function() {
 
 
 //first  influencer list
+function fetchInfluencers() {
     fetch('homeinfluencer.json')
         .then(response => response.json())
         .then(data => {
@@ -44,7 +45,7 @@ document.querySelector(".search-btn").addEventListener("click", function() {
             data.forEach(influencer => {
                 influencerContainer.innerHTML += `
                     <div class="influencer">
-                        <a href="${influencer.url}" target="_blank">
+                        <a href="${influencer.socialMediaLink}" target="_blank">
                             <img src="${influencer.image}" alt="${influencer.name}">
                             <h3>${influencer.name}</h3>
                             <p>${influencer.location}</p>
@@ -57,8 +58,10 @@ document.querySelector(".search-btn").addEventListener("click", function() {
             });
         })
         .catch(error => console.error('Error loading influencer data:', error));
+}
 
-
+// Call this on page load
+document.addEventListener('DOMContentLoaded', fetchInfluencers);
 //influencer list 2
 fetch('homeinflu2.json')
         .then(response => response.json())
@@ -185,3 +188,39 @@ function renderFAQ(faqs) {
         faqContainer.appendChild(faqItem);
     });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const newlyAddedContainer = document.getElementById('newly-added-influencers');
+  
+    async function fetchNewlyAddedInfluencers() {
+      try {
+        const response = await fetch('/Influencer');
+        const newInfluencers = await response.json();
+  
+        // Clear any existing content
+        newlyAddedContainer.innerHTML = '';
+  
+        // Create influencer cards
+        newInfluencers.forEach(influencer => {
+          const influencerCard = document.createElement('div');
+          influencerCard.classList.add('influencer');
+          
+          influencerCard.innerHTML = `
+            <img src="${influencer.image ? '/' + influencer.image : 'default-profile.jpg'}" alt="${influencer.name}">
+            <h3>${influencer.name}</h3>
+            <p>${influencer.platform} Influencer</p>
+            <p>${influencer.category} | ${influencer.location}</p>
+            <p>Price: $${influencer.price}</p>
+          `;
+  
+          newlyAddedContainer.appendChild(influencerCard);
+        });
+      } catch (error) {
+        console.error('Error fetching newly added influencers:', error);
+        newlyAddedContainer.innerHTML = '<p>Unable to load new influencers</p>';
+      }
+    }
+  
+    // Fetch newly added influencers when page loads
+    fetchNewlyAddedInfluencers();
+  });

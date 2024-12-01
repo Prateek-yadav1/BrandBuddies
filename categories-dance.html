@@ -358,159 +358,102 @@ header {
     </div>
 
     <script>
-        //user detail
-        document.querySelector('.userdetail').addEventListener('click', function() {
-            const dropdown = document.getElementById('userDropdown');
-            dropdown.style.display = dropdown.style.display === 'none' || dropdown.style.display === '' ? 'block' : 'none';
-        });
-        window.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('userDropdown');
-            if (!event.target.matches('.userdetail') && !dropdown.contains(event.target)) {
-                dropdown.style.display = 'none';
+        class Influencer {
+            constructor(name, location, gender, image, socialMedia) {
+                this.name = name;
+                this.location = location;
+                this.gender = gender;
+                this.image = image;
+                this.socialMedia = socialMedia;
             }
-        });
-        
-        
-        
-        let influencersData = []; 
-        //to store the fetched influencer data
-        
-           
-        //fetch data from JSON and render it dynamically
-        fetch('dance.json')
-            .then(response => response.json())
-            .then(data => {
-                influencersData = data.influencers; 
-                renderInfluencers(influencersData);
-            })
-            .catch(error => console.error('Error fetching data:', error));
-        
-        //Function to render influencers to the grid
-        function renderInfluencers(influencers) {
-            const influencerGrid = document.getElementById('influencer-grid');
-            influencerGrid.innerHTML = '';
-        
-            if (influencers.length === 0) {
-                const noResultMessage = document.createElement('p');
-                noResultMessage.textContent = "No influencers found for the selected filters.";
-                noResultMessage.style.textAlign = "center"; 
-                noResultMessage.style.alignItems = "center"; 
-                noResultMessage.style.fontSize = "18px"; 
-                influencerGrid.appendChild(noResultMessage);
-                return;
-            }
-        
-            //render the matching influencers
-            influencers.forEach(influencer => {
-                const link = document.createElement('a');
-                link.href = influencer.socialMedia;
-                link.target = '_blank';
-        
-                const card = document.createElement('div');
-                card.classList.add('influencer-card');
-        
-                const img = document.createElement('img');
-                img.src = influencer.image;
-                img.alt = influencer.name;
-                img.classList.add('influencer-image');
-        
-                const info = document.createElement('div');
-                info.classList.add('influencer-info');
-        
-                card.appendChild(img);
-                card.appendChild(info);
-                link.appendChild(card); 
-                influencerGrid.appendChild(link);
-            });
         }
-        // Reset Button for Filters
-        const resetButton = document.createElement("button");
-        resetButton.textContent = "Reset Filters";
-        resetButton.style.padding = "5px 15px";
-        resetButton.style.borderRadius = "30px";
-        resetButton.style.cursor = "pointer";
-        resetButton.style.backgroundColor = "#D1DAF5";
-        resetButton.addEventListener("click", () => {
-            locationDropdown.value = "";
-            genderDropdown.value = "";
-            renderInfluencers(influencersData); // Reset to all influencers
-        });
-        
-        document.querySelector(".filter-buttons").appendChild(resetButton);
-        
-        
-        // Filter influencers based on location and gender
-        const locationDropdown = document.querySelector('select:nth-child(1)'); //select location drpdwn
-        const genderDropdown = document.querySelector('select:nth-child(2)'); //select gender drpdwn
-        
-        function filterInfluencers() {
-            const selectedLocation = locationDropdown.value.toLowerCase();
-            const selectedGender = genderDropdown.value.toLowerCase();
-        
-            const filteredInfluencers = influencersData.filter(influencer => {
-                const matchesLocation = selectedLocation === "" || influencer.location.toLowerCase() === selectedLocation;
-                const matchesGender = selectedGender === "" || influencer.gender.toLowerCase() === selectedGender;
-        
-                return matchesLocation && matchesGender;
-            });
-        
-            renderInfluencers(filteredInfluencers);
-        }
-        
-        locationDropdown.addEventListener('change', filterInfluencers);
-        genderDropdown.addEventListener('change', filterInfluencers);
-        
-        // Modal Popup for Influencer Details
-        function openModal(influencer) {
-    const modal = document.createElement("div");
-    modal.classList.add("modal-overlay");
-    
-    const modalContent = `
-        <div class="modal-content">
-            <img src="${influencer.image}" class="modal-image" />
-            <h2 class="modal-title">${influencer.name}</h2>
-            <p class="modal-location">${influencer.location}</p>
-            <div class="social-links">
-                <a href="${influencer.socialMedia}" target="_blank" class="social-link">View Profile</a>
-            </div>
-            <button onclick="document.body.removeChild(this.parentElement.parentElement)" class="modal-close">
-                Close
-            </button>
-        </div>
-    `;
 
-    modal.innerHTML = modalContent;
-    document.body.appendChild(modal);
-}
-        
-        
-        // Update renderInfluencers to include modal on click
-        function renderInfluencers(influencers) {
-            const influencerGrid = document.getElementById("influencer-grid");
-            influencerGrid.innerHTML = "";
-        
-            if (influencers.length === 0) {
-                const noResultMessage = document.createElement("p");
-                noResultMessage.textContent = "No influencers found for the selected filters.";
-                noResultMessage.style.textAlign = "center";
-                noResultMessage.style.fontSize = "18px";
-                influencerGrid.appendChild(noResultMessage);
-                return;
+        class InfluencerManager {
+            constructor() {
+                this.influencers = [];
+                this.filteredInfluencers = [];
             }
-        
-            influencers.forEach(influencer => {
-                const card = document.createElement("div");
-                card.classList.add("influencer-card");
-                card.innerHTML = `
-                    <img src="${influencer.image}" alt="${influencer.name}" class="influencer-image" />
-                   
-                `;
-                card.addEventListener("click", () => openModal(influencer));
-                influencerGrid.appendChild(card);
-            });
+
+            fetchInfluencers() {
+                return fetch('dance.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        this.influencers = data.map(item =>
+                            new Influencer(item.name, item.location, item.gender, item.image, item.socialMedia)
+                        );
+                        this.renderInfluencers(this.influencers);
+                    })
+                    .catch(error => console.error('Error fetching influencers:', error));
+            }
+
+            filterInfluencers(location, gender) {
+                this.filteredInfluencers = this.influencers.filter(influencer =>
+                    (location === "" || influencer.location === location) &&
+                    (gender === "" || influencer.gender === gender)
+                );
+                this.renderInfluencers(this.filteredInfluencers);
+            }
+
+            renderInfluencers(influencers) {
+                const grid = document.getElementById("influencerGrid");
+                grid.innerHTML = ""; // Clear grid
+
+                if (influencers.length === 0) {
+                    grid.innerHTML = "<p>No influencers found for the selected filters.</p>";
+                    return;
+                }
+
+                influencers.forEach(influencer => {
+                    const card = document.createElement("div");
+                    card.classList.add("influencer-card");
+                    card.innerHTML = `
+                        <img src="${influencer.image}" alt="${influencer.name}" class="influencer-image" />
+                        <div class="influencer-info">
+                            <h3>${influencer.name}</h3>
+                            <p>${influencer.location}</p>
+                        </div>
+                    `;
+                    card.addEventListener("click", () => Modal.showModal(influencer));
+                    grid.appendChild(card);
+                });
+            }
         }
-        
-        </script>
+
+        class Modal {
+            static showModal(influencer) {
+                const modal = document.createElement("div");
+                modal.classList.add("modal-overlay");
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <img src="${influencer.image}" class="modal-image" alt="${influencer.name}" />
+                        <h2 class="modal-title">${influencer.name}</h2>
+                        <p class="modal-location">${influencer.location}</p>
+                        <a href="${influencer.socialMedia}" target="_blank" class="social-link">View Profile</a>
+                        <button class="modal-close" onclick="document.body.removeChild(this.parentElement.parentElement)">Close</button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+        }
+
+        // Instantiate classes and add event listeners
+        const manager = new InfluencerManager();
+
+        document.getElementById("locationFilter").addEventListener("change", (e) => {
+            const location = e.target.value;
+            const gender = document.getElementById("genderFilter").value;
+            manager.filterInfluencers(location, gender);
+        });
+
+        document.getElementById("genderFilter").addEventListener("change", (e) => {
+            const location = document.getElementById("locationFilter").value;
+            const gender = e.target.value;
+            manager.filterInfluencers(location, gender);
+        });
+
+        // Fetch and render influencers on page load
+        manager.fetchInfluencers();
+    </script>
 </body>
 
 </html>
