@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchNewlyAddedInfluencers() {
         try {
           // Use the full server URL
-          const response = await fetch('http://localhost:5001/newly-added-influencers');
+          const response = await fetch('http://localhost:3000/newly-added-influencers');
           const newInfluencers = await response.json();
       
           // Rest of the code remains the same

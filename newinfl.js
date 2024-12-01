@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Influencer = require('./server2.js').Influencer; // Export Influencer model from server2.js
+const Influencer = require('./server.js').Influencer; 
 const cors = require('cors');
 app.use(cors());
 

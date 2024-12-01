@@ -279,7 +279,7 @@ fetch('users.json')
     const password = document.getElementById('password').value;
 
     //send a POST request to the backend
-    fetch('http://localhost:5001/login', {
+    fetch('http://localhost:3000/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -295,7 +295,7 @@ fetch('users.json')
             messageElement.textContent = "Login successful!";
             messageElement.style.color = "green";
             setTimeout(() => {
-                window.location.href = "http://127.0.0.1:5500/BrandBuddies.html"; // Redirect
+                window.location.href = "http://localhost:3000/BrandBuddies.html"; // Redirect
             }, 1000);
         } else {
             messageElement.textContent = data.message;
@@ -328,7 +328,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         messageElement.textContent = "Login successful!";
         messageElement.style.color = "green";
         setTimeout(() => {
-            window.location.href = "http://127.0.0.1:5500/BrandBuddies.html"; // Redirect to the homepage or dashboard
+            window.location.href = "http://localhost:3000/BrandBuddies.html"; // Redirect to the homepage or dashboard
         }, 1000);
     } else {
         messageElement.textContent = "Invalid username or password.";
