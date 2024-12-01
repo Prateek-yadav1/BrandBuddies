@@ -5,13 +5,13 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Initialize the app
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/uploads', express.static('uploads'));
 
-// Connect to MongoDB
+
 mongoose.connect('mongodb+srv://prateekyadav:aDA4VgyDOHdZlDQc@bbcluster.giayb.mongodb.net/BrandBuddies', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -19,7 +19,7 @@ mongoose.connect('mongodb+srv://prateekyadav:aDA4VgyDOHdZlDQc@bbcluster.giayb.mo
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('Could not connect to MongoDB:', err));
 
-// Define Influencer Schema and Model
+//define influencer schema
 const influencerSchema = new mongoose.Schema({
   name: String,
   location: String,
@@ -28,12 +28,12 @@ const influencerSchema = new mongoose.Schema({
   platform: String,
   category: String,
   price: Number,
-  image: String, // Will store the image file path
+  image: String,
 });
 
 const Influencer = mongoose.model('Influencer', influencerSchema);
 
-// Multer Configuration for File Uploads
+//multer Configuration for fileupload
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
@@ -45,7 +45,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// API Endpoint to Add New Influencer
+//API endpoint to add new infl
 app.post('/influencers/add', upload.single('image'), async (req, res) => {
     const { name, location, gender, socialMediaLink, platform, category, price } = req.body;
     const image = req.file ? req.file.path : null;
@@ -78,7 +78,7 @@ app.post('/influencers/add', upload.single('image'), async (req, res) => {
  
   const cors = require('cors');
   
-  // Add these middleware
+  //add middleware
   app.use(cors());
   app.use(express.json());
 app.use(cors({
@@ -87,7 +87,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
   
-  // Route for newly added influencers
+  //route newly added infl
   app.get('/newly-added-influencers', async (req, res) => {
     try {
       const newInfluencers = await Influencer.find()

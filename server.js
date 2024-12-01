@@ -3,12 +3,11 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-// Initialize the app
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-// Connect to MongoDB
+
 mongoose.connect('mongodb+srv://prateekyadav:aDA4VgyDOHdZlDQc@bbcluster.giayb.mongodb.net/BrandBuddies', { 
     useNewUrlParser: true, 
     useUnifiedTopology: true 
@@ -16,7 +15,7 @@ mongoose.connect('mongodb+srv://prateekyadav:aDA4VgyDOHdZlDQc@bbcluster.giayb.mo
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('Could not connect to MongoDB:', err));
 
-// Define a User schema and model
+
 const userSchema = new mongoose.Schema({
     username: String,
     email: String,
@@ -25,18 +24,18 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// Signup Route
+//signup Route
 app.post('/signup', async (req, res) => {
     const { username, email, password } = req.body;
 
     try {
-        // Check if user already exists
+        //check if user already exist
         const existingUser = await User.findOne({ username });
         if (existingUser) {
             return res.status(400).json({ message: 'Username already exists' });
         }
 
-        // Save new user
+        //save new usr
         const newUser = new User({ username, email, password });
         await newUser.save();
         res.status(201).json({ message: 'User registered successfully' });
@@ -45,12 +44,12 @@ app.post('/signup', async (req, res) => {
     }
 });
 
-// Login Route
+//login route
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        // Find the user in the database
+        //find user in databse
         const user = await User.findOne({ username, password });
         if (user) {
             res.status(200).json({ message: 'Login successful', user });
@@ -62,7 +61,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Start the server
+
 const PORT = 5001;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

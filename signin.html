@@ -272,13 +272,13 @@ fetch('users.json')
     document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    // Show the loading spinner
+    //loading spinner
     document.getElementById('loadingSpinner').style.display = 'block';
 
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    // Send a POST request to the backend
+    //send a POST request to the backend
     fetch('http://localhost:5001/login', {
         method: 'POST',
         headers: {

@@ -4,12 +4,12 @@ const Influencer = require('./server2.js').Influencer; // Export Influencer mode
 const cors = require('cors');
 app.use(cors());
 
-// Route to get newly added influencers (last 6 added)
+//route to get newly aded influencer
 router.get('/newly-added-influencers', async (req, res) => {
   try {
     const newInfluencers = await Influencer.find()
-      .sort({ _id: -1 }) // Sort by most recently created
-      .limit(6); // Limit to 6 most recent influencers
+      .sort({ _id: -1 })
+      .limit(6);
     
     res.json(newInfluencers);
   } catch (error) {
