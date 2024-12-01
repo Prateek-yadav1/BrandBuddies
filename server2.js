@@ -6,10 +6,12 @@ const path = require('path');
 const fs = require('fs');
 
 
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/uploads', express.static('uploads'));
+
 
 
 mongoose.connect('mongodb+srv://prateekyadav:aDA4VgyDOHdZlDQc@bbcluster.giayb.mongodb.net/BrandBuddies', {
@@ -30,7 +32,6 @@ const influencerSchema = new mongoose.Schema({
   price: Number,
   image: String,
 });
-
 const Influencer = mongoose.model('Influencer', influencerSchema);
 
 //multer Configuration for fileupload
@@ -39,7 +40,7 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // Appending extension
+    cb(null, Date.now() + path.extname(file.originalname));
   },
 });
 
@@ -82,7 +83,7 @@ app.post('/influencers/add', upload.single('image'), async (req, res) => {
   app.use(cors());
   app.use(express.json());
 app.use(cors({
-  origin: 'http://127.0.0.1:5500', // Your frontend URL
+  origin: 'http://127.0.0.1:5500',
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -91,8 +92,8 @@ app.use(cors({
   app.get('/newly-added-influencers', async (req, res) => {
     try {
       const newInfluencers = await Influencer.find()
-        .sort({ _id: -1 }) // Sort by most recently created
-        .limit(3); // Limit to 6 most recent influencers
+        .sort({ _id: -1 }) 
+        .limit(3);
       
       res.json(newInfluencers);
     } catch (error) {
